@@ -1,5 +1,28 @@
-﻿<h3>DeviceCard</h3>
+﻿@using sensorSphere.Models
+<div class="card mb-3">
+	<div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title">@Device.Name</h5>
+            <span class="badge @GetStatusBadgeClass()">@Device.Status</span>
+        </div>
+        <p class="card-text">
+            <small>📍 @Device.Location</small><br />
+            <small>🕒 Last seen: @Device.LastSeen.ToString("g")</small>
+        </p>
+        <div class="btn-group" role="group">
+            <button class="btn btn-sm btn-outline-primary" @onclick="OnToggleStatus">Toggle Status</button>
+            <button class="btn btn-sm btn-outline-secondary" @onclick="OnEdit">Edit</button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="OnDelete">Delete</button>
+        </div>
+    </div>
+</div>
 
 @code {
+    [Parameter] public Device Device { get; set; } = new();
+    [Parameter] public EventCallback<Device> OnToggleStatus { get; set; }
+    [Parameter] public EventCallback<Device> OnEdit { get; set; }
+    [Parameter] public EventCallback<Device> OnDelete { get; set; }
 
+    private string GetStatusBadgeClass() =>
+        Device.Status == "Online" ? "bg-success" : "bg-danger";
 }

@@ -1,5 +1,60 @@
-﻿<h3>DashboardStats</h3>
+﻿@* Displays key metrics as Bootstrap cards *@
+<div class="row">
+    <div class="col-md-2">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Online Devices</h6>
+                <h2>@OnlineCount</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-secondary mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Offline Devices</h6>
+                <h2>@OfflineCount</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Avg Temp</h6>
+                <h2>@AverageTemp °C</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Avg Humidity</h6>
+                <h2>@AverageHumidity %</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Latest Reading</h6>
+                <small>@LatestReadingTime</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Recent Alerts</h6>
+                <h2>@RecentAlerts</h2>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
-
+    [Parameter] public int OnlineCount { get; set; }
+    [Parameter] public int OfflineCount { get; set; }
+    [Parameter] public double AverageTemp { get; set; }
+    [Parameter] public double AverageHumidity { get; set; }
+    [Parameter] public string LatestReadingTime { get; set; } = string.Empty;
+    [Parameter] public int RecentAlerts { get; set; }
 }

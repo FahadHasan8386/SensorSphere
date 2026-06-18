@@ -1,5 +1,32 @@
-﻿<h3>ConfirmDeleteModal</h3>
+﻿
+@if (IsVisible)
+{
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" @onclick="Cancel"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete <strong>@ItemName</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                    <button class="btn btn-danger" @onclick="Confirm">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
 
 @code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public string ItemName { get; set; } = string.Empty;
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
 
+    private async Task Confirm() => await OnConfirm.InvokeAsync();
+    private async Task Cancel() => await OnCancel.InvokeAsync();
 }
