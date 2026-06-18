@@ -1,5 +1,42 @@
-﻿<h3>SensorCard</h3>
+﻿@using sensorSphere.Models
+<div class="card mb-3">
+	<div class="card-body">
+		<h5 class="card-title"> @SensorType</h5>
 
-@code {
+        <div class="row">
+            @if (SensorType == "DHT22")
+            {
+                <div class="col-6">🌡️ Temp: <strong>@Reading?.Temperature °C</strong></div>
+                <div class="col-6">💧 Humidity: <strong>@Reading?.Humidity %</strong></div>
+            }
+            else if (SensorType == "MQ7")
+            {
+                <div class="col-12">💨 CO: <strong>@Reading?.COLevel ppm</strong></div>
+            }
+            else if (SensorType == "MQ136")
+            {
+                <div class="col-12">🧪 H2S: <strong>@Reading?.H2SLevel ppm</strong></div>
+            }
+        </div>
+        <small class="text-muted">@Reading?.Timestamp.ToString("HH:mm:ss")</small>
+	</div>
+</div>
+
+@code{
+    [Parameter] public string SensorType { get; set; } = string.Empty;
+
+    [Parameter] public SensorReading? Reading { get; set; }
+
+    private string GetCardClass()
+    {
+        if (Reading == null) return "bg-liight";
+        return SensorType switch
+        {
+            "DHT22" => Reading.Temperature > 30 ? "border-danger" : "border-info",
+            "MQ7" => Reading.COLevel > 15 ? "border-danger" : "border-warning",
+            "MQ136" => Reading.H2SLevel > 5 ? "border-danger" : "border-success",
+            _ => "border-secondary"
+        };
+    }
 
 }
