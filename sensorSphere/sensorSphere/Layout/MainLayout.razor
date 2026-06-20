@@ -1,16 +1,27 @@
-﻿@inherits LayoutComponentBase
+﻿@inherits LayoutView
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <div class="top-row px-4 auth">
+            <CascadingAuthenticationState>
+                <AuthorizeView>
+                    <Authorized>
+                        <span>Hello, @context.User.Identity?.Name!</span>
+                        <button class="btn btn-sm btn-outline-secondary ms-2" @onclick="Logout">Logout</button>
+                    </Authorized>
+                    <NotAuthorized>
+                        <a href="/login">Login</a>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </CascadingAuthenticationState>
         </div>
-
         <article class="content px-4">
             @Body
         </article>
     </main>
 </div>
+

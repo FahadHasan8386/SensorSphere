@@ -1,1 +1,79 @@
-﻿
+﻿@page "/"
+@using sensorSphere.Services
+@using sensorSphere.Components
+@inject DeviceStateService DeviceService
+@inject SensorStateService SensorService
+@inject AlertStateService AlertService
+
+<div class="container mt-4">
+    <h2>Dashboard</h2>
+    <DashboardStats 
+        OnlineCount="@onlineCount" 
+        OfflineCount="@offlineCount"
+        AverageTemp="@avgTemp"
+        AverageHumidity="@avgHumidity"
+        LatestReadingTime="@latestReadingTime"
+        RecentAlerts="@recentAlerts"
+    />
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <h5>Top Alert</h5>
+            @if (unacknowledgedAlerts.Any())
+            {
+                var topAlert = unacknowledgedAlerts.First();
+                <div class="alert alert-warning">@topAlert.Message</div>
+            }
+            else
+            {
+                <div class="alert alert-success">All clear!</div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private int onlineCount = 0;
+    private int offlineCount = 0;
+    private double avgTemp = 0;
+    private double avgHumidity = 0;
+    private string latestReadingTime = string.Empty;
+    private int recentAlerts = 0;
+    private List<Alert> unacknowledgedAlerts = new();
+
+    protected override void OnInitialized()
+    {
+        UpdateStats();
+        // Subscribe to service changes
+        DeviceService.OnChange += UpdateStats;
+        SensorService.OnChange += UpdateStats;
+        AlertService.OnChange += UpdateStats;
+    }
+
+    private void UpdateStats()
+    {
+        var devices = DeviceService.Devices;
+        onlineCount = devices.Count(d => d.Status == "Online");
+        offlineCount = devices.Count(d => d.Status == "Offline");
+
+        // Average temperature from latest DHT22 readings per device
+        var dhtReadings = devices
+            .Select(d => SensorService.GetLatestReading(d.Id, "DHT22"))
+            .Where(r => r != null)
+            .ToList();
+        avgTemp = dhtReadings.Any() ? Math.Round(dhtReadings.Average(r => r.Temperature), 1) : 0;
+
+        // Average humidity from DHT22
+        avgHumidity = dhtReadings.Any() ? Math.Round(dhtReadings.Average(r => r.Humidity), 1) : 0;
+
+        // Latest reading timestamp: get the most recent reading overall
+        var latest = SensorService.Readings.OrderByDescending(r => r.Timestamp).FirstOrDefault();
+        latestReadingTime = latest?.Timestamp.ToString("HH:mm") ?? "N/A";
+
+        // Recent alerts (unacknowledged)
+        unacknowledgedAlerts = AlertService.Alerts.Where(a => !a.IsAcknowledged).ToList();
+        recentAlerts = unacknowledgedAlerts.Count;
+
+        InvokeAsync(StateHasChanged);
+    }
+}
