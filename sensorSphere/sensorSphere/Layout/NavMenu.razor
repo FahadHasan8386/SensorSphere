@@ -29,9 +29,5 @@
 @code {
     private bool IsAdmin = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthProvider.GetAuthenticationStateAsync();
-        IsAdmin = authState.User.IsInRole("Admin");
-    }
+  
 }

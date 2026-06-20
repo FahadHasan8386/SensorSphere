@@ -12,8 +12,8 @@
             <CascadingAuthenticationState>
                 <AuthorizeView>
                     <Authorized>
-                        <span>Hello, @context.User.Identity?.Name!</span>
-                        <button class="btn btn-sm btn-outline-secondary ms-2" @onclick="Logout">Logout</button>
+                        <span>Hello, </span>
+                        <button class="btn btn-sm btn-outline-secondary ms-2" >Logout</button>
                     </Authorized>
                     <NotAuthorized>
                         <a href="/login">Login</a>
@@ -22,15 +22,7 @@
             </CascadingAuthenticationState>
         </div>
         <article class="content px-4">
-            @Body
+           
         </article>
     </main>
 </div>
-
-@code {
-    private async Task Logout()
-    {
-        await AuthService.LogoutAsync();
-        Navigation.NavigateTo("/login", true);
-    }
-}
