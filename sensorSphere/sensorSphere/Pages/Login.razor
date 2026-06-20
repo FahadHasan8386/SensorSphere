@@ -1,1 +1,57 @@
-﻿
+﻿@page "/login"
+@using sensorSphere.Models
+@using sensorSphere.Services
+@inject NavigationManager Navigation
+@inject AuthStateService AuthService
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header"><h4>sensorSphere Login</h4></div>
+            <div class="card-body">
+                <EditForm Model="@LoginModel" OnValidSubmit="@HandleLogin">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="text-danger" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <InputText class="form-control" @bind-Value="LoginModel.Email" />
+                        <ValidationMessage For="() => LoginModel.Email" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <InputText type="password" class="form-control" @bind-Value="LoginModel.Password" />
+                        <ValidationMessage For="() => LoginModel.Password" />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" disabled="@isLoading">
+                        @(isLoading ? "Logging..." : "Login")
+                    </button>
+                    @if (!string.IsNullOrEmpty(error))
+                    {
+                        <div class="alert alert-danger mt-2">@error</div>
+                    }
+                </EditForm>
+                <hr />
+                <small>Demo: admin@sensorsphere.com / admin123 &nbsp;|&nbsp; user@sensorsphere.com / user123</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel LoginModel = new();
+    private bool isLoading = false;
+    private string error = string.Empty;
+
+    private async Task HandleLogin()
+    {
+        isLoading = true;
+        error = string.Empty;
+        var success = await AuthService.LoginAsync(LoginModel.Email, LoginModel.Password);
+        if (success)
+            Navigation.NavigateTo("/", true);
+        else
+            error = "Invalid credentials.";
+        isLoading = false;
+    }
+}
