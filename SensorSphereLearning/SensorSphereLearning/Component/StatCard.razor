@@ -1,5 +1,18 @@
-﻿<h3>StatCard</h3>
+﻿
+<div class="card text-white bg-@CardColor mb-3 shadow-sm">
+        <div class="card-body">
+            <h6 class="card-title">@Title</h6>
+            <p class="card-text fs-2 fw-bold mb-0">@Value</p>
+        </div>
+</div>
 
-@code {
+@code{
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
 
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public string CardColor { get; set; } = "primary";
 }

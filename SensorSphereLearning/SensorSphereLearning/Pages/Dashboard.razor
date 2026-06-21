@@ -1,5 +1,43 @@
-﻿<h3>Dashboard</h3>
+﻿@page "/"
+@using SensorSphereLearning.Component
+@using SensorSphereLearning.Model
 
-@code {
+<PageTitle>Dashboard - AtmoSync Agro Ai</PageTitle>
 
+<h2 class="mb-4">📊 IoT Dashboard</h2>
+
+<div class="row">
+	<div class="row-cols-md-4">
+		<StatCard Title="Total Sensors" Value="@totalCount" CardColor="primary"/>
+	</div>
+	<div class="row-cols-md-4">
+		<StatCard Title="Total Sensors" Value="@onlineCount" CardColor="primary" />
+	</div>
+	<div class="row-cols-md-4">
+		<StatCard Title="Total Sensors" Value="@offlineCount" CardColor="primary" />
+	</div>
+</div>
+<h4 class="mt-4 mb-3">Recent Sensors</h4>
+
+
+@code{
+	private List<Sensor> recentSensor = new();
+	private int totalCount;
+	private int onlineCount;
+	private int offlineCount;
+
+	protected override void OnInitialized()
+	{
+		LoadDashboardData();
+	}
+	private void LoadDashboardData()
+	{
+		totalCount = allSensors.Count;
+		onlineCount = allSensors.Count(s => s.IsOnline);
+		offlineCount = allSensors.Count(s => !s.IsOnline);
+
+		recentSensors = SensorService.GetRecentSensors(3);
+
+		AppState.SetTotalSensors(totalCount);
+	}
 }
