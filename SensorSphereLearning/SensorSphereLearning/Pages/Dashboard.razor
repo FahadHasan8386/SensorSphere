@@ -1,6 +1,9 @@
 ﻿@page "/"
 @using SensorSphereLearning.Component
 @using SensorSphereLearning.Model
+@using SensorSphereLearning.Services
+@inject SensorService SensorService
+@inject AppState AppState
 
 <PageTitle>Dashboard - AtmoSync Agro Ai</PageTitle>
 
@@ -22,7 +25,7 @@
 <SensorTable Sensors="recentSensors" ShowActions="false" />
 
 @code{
-	private List<Sensor> recentSensor = new();
+	private List<Sensor> recentSensors = new();
 	private int totalCount;
 	private int onlineCount;
 	private int offlineCount;
@@ -33,6 +36,8 @@
 	}
 	private void LoadDashboardData()
 	{
+		var allSensors = SensorService.GetSensors();
+
 		totalCount = allSensors.Count;
 		onlineCount = allSensors.Count(s => s.IsOnline);
 		offlineCount = allSensors.Count(s => !s.IsOnline);
