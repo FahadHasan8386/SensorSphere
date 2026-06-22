@@ -15,5 +15,41 @@ namespace SensorSphereLearning.Services
         private int _nextId = 4;
 
 
+        public List<Sensor> GetSensors() => _sensors;
+
+        public List<Sensor> GetRecentSensors(int count = 3) => 
+            _sensors.OrderByDescending(s => s.Id).Take(count).ToList();
+
+
+        public void AddSensor(string name , double temparature , double humidity)
+        {
+            _sensors.Add(new Sensor
+            {
+                Id = _nextId++,
+                Name = name,
+                Temperature = temparature,
+                Humidity = humidity,
+                IsOnline = true
+            });
+        }
+
+
+        public void DeleteSensor(int id)
+        {
+            var sensor = _sensors.FirstOrDefault(s => s.Id == id);
+            if(sensor is not null)
+            {
+                _sensors.Remove(sensor);
+            }
+        }
+
+        public void ToggleStatus(int id)
+        {
+            var sensor = _sensors.FirstOrDefault(s => s.Id == id);
+            if(sensor is not null)
+            {
+                sensor.IsOnline = !sensor.IsOnline;
+            }
+        }
     }
 }
