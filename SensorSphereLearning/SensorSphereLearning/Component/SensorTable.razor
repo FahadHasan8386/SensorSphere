@@ -1,5 +1,61 @@
-﻿<h3>SensorTable</h3>
+﻿@using SensorSphereLearning.Model
+<table class="table table-striped table-hover align-middle">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Temperature (°C)</th>
+            <th>Humidity (%)</th>
+            <th>Status</th>
+            @if (ShowActions)
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var sensor in Sensors)
+        {
+            <tr>
+                <td>@sensor.Id</td>
+                <td>@sensor.Name</td>
+                <td>@sensor.Temperature</td>
+                <td>@sensor.Humidity</td>
+                <td>
+                    <span class="badge bg-@(sensor.IsOnline ? "success" : "secondary")">
+                        @sensor.Status
+                    </span>
+                </td>
+                @if (ShowActions)
+                {
+                    <td>
+
+                        <button class="btn btn-sm btn-outline-primary me-1"
+                                @onclick="() => OnToggleStatus.InvokeAsync(sensor.Id)">
+                            Toggle Status
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger"
+                                @onclick="() => OnDeleteSensor.InvokeAsync(sensor.Id)">
+                            Delete
+                        </button>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
 
 @code {
+    [Parameter]
+    public List<Sensor> Sensors { get; set; } = new();
 
+    [Parameter]
+    public bool ShowActions { get; set; } = true;
+
+    [Parameter]
+    public EventCallback<int> OnDeleteSensor { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnToggleStatus { get; set; }
 }
