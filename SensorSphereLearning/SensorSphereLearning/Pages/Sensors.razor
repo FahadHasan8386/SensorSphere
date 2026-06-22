@@ -1,8 +1,10 @@
 ﻿@page "/sensors"
+@using SensorSphereLearning.Component
 @using SensorSphereLearning.Model
 @using SensorSphereLearning.Services
 @inject SensorService SensorService
 @inject AppState AppState
+
 
 <PageTitle>Sensors - SensorSphere Learning</PageTitle>
 
@@ -14,20 +16,20 @@
 
         <div class="row g-2">
             <div class="col-md-4">
-                <label class="form-label">Name</label>! -->
+                <label class="form-label">Name</label>
+
                 <input class="form-control" @bind="newName" placeholder="e.g. DHT22" />
             </div>
             <div class="col-md-3">
                 <label class="form-label">Temperature (°C)</label>
                 <input class="form-control" type="number" @bind="newTemperature" />
             </div>
-
             <div class="col-md-3">
                 <label class="form-label">Humidity (%)</label>
                 <input class="form-control" type="number" @bind="newHumidity" />
             </div>
-
             <div class="col-md-2 d-flex align-items-end">
+                
                 <button class="btn btn-primary w-100" @onclick="AddSensor">
                     Add Sensor
                 </button>
@@ -42,6 +44,8 @@
 </div>
 
 <h4 class="mb-3">All Sensors</h4>
+
+
 <SensorTable Sensors="allSensors"
              ShowActions="true"
              OnDeleteSensor="DeleteSensor"
@@ -50,7 +54,6 @@
 @code {
     private List<Sensor> allSensors = new();
 
-    // These fields are bound to the form inputs above using @bind.
     private string newName = string.Empty;
     private double newTemperature;
     private double newHumidity;
@@ -87,4 +90,15 @@
         RefreshSensorList();
     }
 
+    private void DeleteSensor(int sensorId)
+    {
+        SensorService.DeleteSensor(sensorId);
+        RefreshSensorList();
+    }
+
+    private void ToggleStatus(int sensorId)
+    {
+        SensorService.ToggleStatus(sensorId);
+        RefreshSensorList();
+    }
 }

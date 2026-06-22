@@ -10,14 +10,14 @@
 <h2 class="mb-4">📊 IoT Dashboard</h2>
 
 <div class="row">
-	<div class="row-cols-md-4">
+	<div class="col-md-4">
 		<StatCard Title="Total Sensors" Value="@totalCount" CardColor="primary"/>
 	</div>
-	<div class="row-cols-md-4">
-		<StatCard Title="Total Sensors" Value="@onlineCount" CardColor="primary" />
+	<div class="col-md-4">
+		<StatCard Title="Total Sensors" Value="@onlineCount" CardColor="success" />
 	</div>
-	<div class="row-cols-md-4">
-		<StatCard Title="Total Sensors" Value="@offlineCount" CardColor="primary" />
+	<div class="col-md-4">
+		<StatCard Title="Total Sensors" Value="@offlineCount" CardColor="danger" />
 	</div>
 </div>
 <h4 class="mt-4 mb-3">Recent Sensors</h4>
